@@ -28,14 +28,14 @@ import segments from "../test/segments.json";
 export default {
   components: { LeaderboardListItem, LeaderboardChart },
   data() {
-    return {};
+    return {
+      athlete_filter: []
+    };
   },
   computed: {
     athlete_results: function() {
-      return athlete_results.filter(
-        athlete_result =>
-          athlete_result.athlete_name == "Manuel F." ||
-          athlete_result.athlete_name == "Urs R."
+      return athlete_results.filter(athlete_result =>
+        this.athlete_filter.includes(athlete_result.athlete_name)
       );
     },
     segments: function() {
@@ -51,7 +51,16 @@ export default {
     },
     chartoptions: function() {
       return {
-        scales: { yAxes: [{ ticks: { reverse: true } }] }
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                suggestedMin: 1,
+                reverse: true
+              }
+            }
+          ]
+        }
       };
     },
     datasets: function() {
