@@ -26,8 +26,15 @@ export default {
   data() {
     return {
       segments: segments,
-      athlete_results: athlete_results
+      athlete_results_raw: athlete_results
     };
+  },
+  computed: {
+    athlete_results: function() {
+      return this.athlete_results_raw.filter(
+        athlete_result => athlete_result.athlete_name == "Manuel F."
+      );
+    }
   }
 };
 </script>
