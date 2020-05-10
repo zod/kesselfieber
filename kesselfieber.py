@@ -2,7 +2,7 @@
 
 import copy
 import json
-leaderboards_segment = []
+athlete_results = {}
 leaderboard_total = {}
 
 segments = json.load(open("test/segments.json", "r"))
@@ -16,7 +16,7 @@ for segment in segments:
         points = len(entries) - entry['rank'] + 1
         if name not in leaderboard_total:
             leaderboard_total[name] = {
-                'points': points
+                'points': points,
             }
         else:
             leaderboard_total[name]['points'] += points
@@ -24,7 +24,6 @@ for segment in segments:
     # Now rank them, if they have the same score, they should get the same rank
     leaderboard_sorted = sorted(
         leaderboard_total.items(), key=lambda x: x[1]['points'], reverse=True)
-    leaderboard_segment = {}
     rank_same = 0
     rank = 0
     for index, entry in enumerate(leaderboard_sorted):
@@ -35,8 +34,23 @@ for segment in segments:
         else:
             rank += 1 + rank_same
             rank_same = 0
-        value['rank'] = rank
-        leaderboard_segment[name] = value
-    leaderboards_segment.append(copy.deepcopy(leaderboard_segment))
+        segment_result = {
+            "id": segment["index"],
+            "rank": rank,
+            "points": value["points"],
+        }
+        if name in athlete_results:
+            athlete_results[name]["segments"].append(segment_result)
+        else:
+            segment_results_empty = [{
+                "id": str(segment_id),
+                "rank": -1,
+                "points": -1
+            } for segment_id in range(1, int(segment["index"]))]
+            athlete_results[name] = {
+                "athlete_name": name,
+                "segments": [*segment_results_empty, segment_result]
+            }
 
-json.dump(leaderboards_segment, open("test/leaderboards.json", "w"))
+json.dump(list(athlete_results.values()),
+          open("test/athlete_results.json", "w"))
