@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>{{ athlete_result.athlete_name }}</td>
-    <td v-for="segment in athlete_result.segments">{{ segment.rank }}</td>
+    <td v-for="segment in athlete_result.segments" :key="segment.id">{{ segment.rank }}</td>
   </tr>
 </template>
 

@@ -1,5 +1,13 @@
 <template>
   <div>
+    <select name="athlete" id="athlete-select" v-model="athlete_add">
+      <option
+        v-for="athlete in athletes"
+        :key="athlete.athlete_name"
+        :value="athlete.athlete_name"
+      >{{ athlete.athlete_name }}</option>
+    </select>
+    <button v-on:click="addAthlete">Add</button>
     <table class="table">
       <thead>
         <tr>
@@ -15,11 +23,12 @@
         />
       </tbody>
     </table>
-    <LeaderboardChart :chartdata="chartdata" :options="chartoptions" />
+    <LeaderboardChart :chart-data="chartdata" :options="chartoptions" />
   </div>
 </template>
 
 <script>
+import "chartjs-plugin-colorschemes";
 import LeaderboardListItem from "./LeaderboardListItem.vue";
 import LeaderboardChart from "./LeaderboardChart.vue";
 import athlete_results from "../test/athlete_results.json";
@@ -29,10 +38,21 @@ export default {
   components: { LeaderboardListItem, LeaderboardChart },
   data() {
     return {
+      athlete_add: "",
       athlete_filter: []
     };
   },
+  methods: {
+    addAthlete() {
+      this.athlete_filter.push(this.athlete_add);
+    }
+  },
   computed: {
+    athletes: function() {
+      return athlete_results.sort((a, b) =>
+        a.athlete_name.localeCompare(b.athlete_name)
+      );
+    },
     athlete_results: function() {
       return athlete_results.filter(athlete_result =>
         this.athlete_filter.includes(athlete_result.athlete_name)
@@ -51,6 +71,11 @@ export default {
     },
     chartoptions: function() {
       return {
+        plugins: {
+          colorschemes: {
+            scheme: "brewer.Paired12"
+          }
+        },
         scales: {
           yAxes: [
             {
@@ -66,6 +91,7 @@ export default {
     datasets: function() {
       return this.athlete_results.map(athlete_result => {
         return {
+          lineTension: 0,
           label: athlete_result.athlete_name,
           fill: false,
           data: athlete_result.segments.map(segment => {
