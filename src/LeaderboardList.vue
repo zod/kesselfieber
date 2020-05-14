@@ -1,18 +1,30 @@
 <template>
   <div>
-    <select name="athlete" id="athlete-select" v-model="athlete_add">
-      <option
-        v-for="athlete in athletes"
-        :key="athlete.athlete_name"
-        :value="athlete.athlete_name"
-      >{{ athlete.athlete_name }}</option>
-    </select>
-    <button v-on:click="addAthlete">Add</button>
+    <div class="form-inline">
+      <label class="sr-only" for="selectGender">Geschlecht</label>
+      <select class="custom-select" id="selectGender" v-model="athlete_gender">
+        <option selected>Geschlecht</option>
+        <option value="M">Buaba</option>
+        <option value="F">Mädla</option>
+      </select>
+      <label class="sr-only" for="selectAthlete">Name</label>
+      <select class="custom-select" name="athlete" id="selectAthlete" v-model="athlete_add">
+        <option
+          v-for="athlete in athletes"
+          :key="athlete.athlete_name"
+          :value="athlete.athlete_name"
+        >{{ athlete.athlete_name }}</option>
+      </select>
+      <button type="submit" class="btn btn-primary" v-on:click="addAthlete">Add</button>
+    </div>
     <table class="table">
       <thead>
         <tr>
           <th>Name</th>
-          <th v-for="segment in segments" :key="segment.id">{{ segment.name }}</th>
+          <th
+            v-for="segment in segments"
+            :key="segment.id"
+          >{{ segment.name }} ({{ segment.leaderboard[athlete_gender].effort_count }})</th>
         </tr>
       </thead>
       <tbody>
@@ -39,7 +51,8 @@ export default {
   data() {
     return {
       athlete_add: "",
-      athlete_filter: []
+      athlete_filter: [],
+      athlete_gender: "M"
     };
   },
   methods: {
@@ -49,12 +62,12 @@ export default {
   },
   computed: {
     athletes: function() {
-      return athlete_results.sort((a, b) =>
+      return athlete_results[this.athlete_gender].sort((a, b) =>
         a.athlete_name.localeCompare(b.athlete_name)
       );
     },
     athlete_results: function() {
-      return athlete_results.filter(athlete_result =>
+      return athlete_results[this.athlete_gender].filter(athlete_result =>
         this.athlete_filter.includes(athlete_result.athlete_name)
       );
     },
@@ -95,10 +108,15 @@ export default {
           label: athlete_result.athlete_name,
           fill: false,
           data: athlete_result.segments.map(segment => {
-            return segment.rank;
+            return segment.rank_total;
           })
         };
       });
+    }
+  },
+  watch: {
+    athlete_gender: function() {
+      this.athlete_filter = [];
     }
   }
 };
