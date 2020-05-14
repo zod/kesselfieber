@@ -27,9 +27,11 @@ for gender in ["M", "F"]:
 
             }
             if name not in athlete_results:
+                segment_result_empty = [{"id": str(segment_id)}
+                                        for segment_id in range(1, int(segment["index"]))]
                 athlete_results[name] = {
                     "athlete_name": name,
-                    "segments": [segment_result]
+                    "segments": [*segment_result_empty, segment_result]
                 }
             else:
                 athlete_results[name]["segments"].append(segment_result)
