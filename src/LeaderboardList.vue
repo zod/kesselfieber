@@ -15,8 +15,9 @@
           :value="athlete.athlete_name"
         >{{ athlete.athlete_name }}</option>
       </select>
-      <button type="submit" class="btn btn-primary" v-on:click="addAthlete">Add</button>
+      <button type="submit" class="btn btn-primary" v-on:click="addAthlete">hinzufügen</button>
     </div>
+    <h3>Segmentergebnisse</h3>
     <table class="table">
       <thead>
         <tr>
@@ -35,6 +36,7 @@
         />
       </tbody>
     </table>
+    <h3>Fieberkurve Gesamt</h3>
     <LeaderboardChart :chart-data="chartdata" :options="chartoptions" />
   </div>
 </template>
