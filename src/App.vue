@@ -25,7 +25,7 @@
           :key="segment.index"
         >{{ segment.name }} ({{segment.entry_count}})</td>
       </tr>
-      <tr v-for="athlete_result in athlete_results" :key="athlete_result.athlete_name">
+      <tr v-for="athlete_result in athlete_results_visible" :key="athlete_result.athlete_name">
         <td>{{ athlete_result.athlete_name }}</td>
         <td v-for="segment in athlete_result.segments">{{ segment.rank_segment }}</td>
       </tr>
@@ -43,7 +43,8 @@ export default {
   components: { AthleteSearch, LeaderboardList },
   data: function() {
     return {
-      athlete_gender: "M"
+      athlete_gender: "M",
+      athlete_filter: []
     };
   },
   computed: {
@@ -125,6 +126,11 @@ export default {
       });
       return Array.from(athlete_results.values());
     },
+    athlete_results_visible: function() {
+      return this.athlete_results.filter(athlete_result =>
+        this.athlete_filter.includes(athlete_result.athlete_name)
+      );
+    },
     segments: function() {
       var segments = [];
       segments_raw.forEach(segment => {
@@ -145,8 +151,12 @@ export default {
   },
   methods: {
     addAthlete: function(athlete_name) {
-      console.log(this.athlete_results);
-      console.log("test", athlete_name);
+      this.athlete_filter.push(athlete_name);
+    },
+    removeAthlete(athlete_name_remove) {
+      this.athlete_filter = this.athlete_filter.filter(
+        athlete_name => athlete_name !== athlete_name_remove
+      );
     }
   }
 };
