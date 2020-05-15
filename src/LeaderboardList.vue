@@ -1,42 +1,5 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Kesselfieber</a>
-      <ul class="navbar-nav mr-auto">
-        <!--
-        <li class="nav-item">
-          <a class="nav-link" href="#">Ergebnisse</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Segmentfieber</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Gesamtfieber</a>
-        </li>
-        -->
-      </ul>
-      <div class="form-inline my-2 my-lg-0">
-        <label class="sr-only" for="selectGender">Geschlecht</label>
-        <select class="custom-select" id="selectGender" v-model="athlete_gender">
-          <option selected>Geschlecht</option>
-          <option value="M">Buaba</option>
-          <option value="F">Mädla</option>
-        </select>
-        <label class="sr-only" for="selectAthlete">Name</label>
-        <select class="custom-select" name="athlete" id="selectAthlete" v-model="athlete_add">
-          <option
-            v-for="athlete in athletes"
-            :key="athlete.athlete_name"
-            :value="athlete.athlete_name"
-          >{{ athlete.athlete_name }}</option>
-        </select>
-        <button
-          type="submit"
-          class="btn btn-outline-primary my-2 my-sm-0"
-          v-on:click="addAthlete"
-        >hinzufügen</button>
-      </div>
-    </nav>
     <table class="table table-hover">
       <thead class="thead-light">
         <tr>
