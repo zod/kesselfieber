@@ -52,10 +52,13 @@
           v-for="athlete_result in athlete_results"
           :key="athlete_result.athlete_name"
           :athlete_result="athlete_result"
+          @remove="removeAthlete"
         />
       </tbody>
     </table>
-    <LeaderboardChart :chart-data="chartdata" :options="chartoptions" />
+    <div class="container-xl">
+      <LeaderboardChart :chart-data="chartdata" :options="chartoptions" />
+    </div>
   </div>
 </template>
 
@@ -78,6 +81,11 @@ export default {
   methods: {
     addAthlete() {
       this.athlete_filter.push(this.athlete_add);
+    },
+    removeAthlete(nameToRemove) {
+      this.athlete_filter = this.athlete_filter.filter(
+        athlete_name => athlete_name !== nameToRemove
+      );
     }
   },
   computed: {
