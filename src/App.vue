@@ -48,15 +48,9 @@ export default {
   },
   computed: {
     athletes: function() {
-      var athletes = new Set();
-      segments_raw.forEach(segment => {
-        if (segment.visible && segment.leaderboard) {
-          segment.leaderboard[this.athlete_gender].entries.forEach(entry => {
-            athletes.add(entry.athlete_name);
-          });
-        }
-      });
-      return Array.from(athletes.values()).sort();
+      return this.athlete_results
+        .map(athlete_result => athlete_result.athlete_name)
+        .sort();
     },
     athlete_results: function() {
       var athlete_results = new Map();
