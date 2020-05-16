@@ -22,9 +22,7 @@
       :segments="segments"
       @remove="removeAthlete"
     />
-    <div class="container-xl">
-      <LeaderboardChart :athlete_results="athlete_results_visible" :segments="segments" />
-    </div>
+    <LeaderboardChart :athlete_results="athlete_results_visible" :segments="segments" />
   </div>
 </template>
 

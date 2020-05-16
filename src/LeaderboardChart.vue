@@ -1,5 +1,5 @@
 <template>
-  <div class="small">
+  <div class="container-xl">
     <line-chart :chart-data="chartdata" :options="chartoptions"></line-chart>
   </div>
 </template>
