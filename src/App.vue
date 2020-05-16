@@ -18,16 +18,20 @@
       <AthleteSearch :athletes="athletes" @add="addAthlete" @changeGender="changeGender" />
     </nav>
     <LeaderboardList :athlete_results="athlete_results_visible" :segments="segments" />
+    <div class="container-xl">
+      <LeaderboardChart :athlete_results="athlete_results_visible" :segments="segments" />
+    </div>
   </div>
 </template>
 
 <script>
 import AthleteSearch from "./AthleteSearch.vue";
+import LeaderboardChart from "./LeaderboardChart.vue";
 import LeaderboardList from "./LeaderboardList.vue";
 import segments_raw from "../test/segments.json";
 
 export default {
-  components: { AthleteSearch, LeaderboardList },
+  components: { AthleteSearch, LeaderboardChart, LeaderboardList },
   data: function() {
     return {
       athlete_gender: "M",
