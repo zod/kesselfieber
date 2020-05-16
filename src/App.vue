@@ -14,6 +14,7 @@
           <a class="nav-link" href="#">Gesamtfieber</a>
         </li>
         -->
+        <li class="nav-item nav-link disabled" v-if="!segments_raw.length">Lade Leistungen...</li>
       </ul>
       <AthleteSearch :athletes="athletes" @add="addAthlete" @changeGender="changeGender" />
     </nav>
@@ -30,12 +31,24 @@
 import AthleteSearch from "./AthleteSearch.vue";
 import LeaderboardChart from "./LeaderboardChart.vue";
 import LeaderboardList from "./LeaderboardList.vue";
-import segments_raw from "../test/segments.json";
 
 export default {
   components: { AthleteSearch, LeaderboardChart, LeaderboardList },
+  mounted() {
+    fetch(
+      "https://cors-anywhere.herokuapp.com/https://bergzeitfahren.kesseln.cc/api/segments"
+    )
+      .then(response => response.json())
+      .then(data => {
+        this.segments_raw = data;
+      })
+      .catch(error => {
+        console.log("Error:", error);
+      });
+  },
   data: function() {
     return {
+      segments_raw: [],
       athlete_gender: "M",
       athlete_filter: []
     };
@@ -49,7 +62,7 @@ export default {
     athlete_results: function() {
       var athlete_results = new Map();
       var leaderboard_total = new Map();
-      segments_raw.forEach(segment => {
+      this.segments_raw.forEach(segment => {
         if (segment.visible && segment.leaderboard) {
           segment.leaderboard[this.athlete_gender].entries.forEach(entry => {
             /* Assign efforts to each athlete */
@@ -128,7 +141,7 @@ export default {
     },
     segments: function() {
       var segments = [];
-      segments_raw.forEach(segment => {
+      this.segments_raw.forEach(segment => {
         if (segment.visible && segment.leaderboard) {
           var entry_kom = segment.leaderboard[this.athlete_gender].entries[0];
           segments.push({
