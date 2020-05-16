@@ -15,22 +15,9 @@
         </li>
         -->
       </ul>
-      <AthleteSearch :athletes="athletes" @add="addAthlete" />
+      <AthleteSearch :athletes="athletes" @add="addAthlete" @changeGender="changeGender" />
     </nav>
-    <table class="table">
-      <tr>
-        <td>Name</td>
-        <td
-          v-for="segment in segments"
-          :key="segment.index"
-        >{{ segment.name }} ({{segment.entry_count}})</td>
-      </tr>
-      <tr v-for="athlete_result in athlete_results_visible" :key="athlete_result.athlete_name">
-        <td>{{ athlete_result.athlete_name }}</td>
-        <td v-for="segment in athlete_result.segments">{{ segment.rank_segment }}</td>
-      </tr>
-    </table>
-    <LeaderboardList />
+    <LeaderboardList :athlete_results="athlete_results_visible" :segments="segments" />
   </div>
 </template>
 
@@ -157,6 +144,10 @@ export default {
       this.athlete_filter = this.athlete_filter.filter(
         athlete_name => athlete_name !== athlete_name_remove
       );
+    },
+    changeGender: function(gender) {
+      this.athlete_gender = gender;
+      this.athlete_filter = [];
     }
   }
 };
