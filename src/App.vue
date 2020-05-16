@@ -120,9 +120,11 @@ export default {
       return Array.from(athlete_results.values());
     },
     athlete_results_visible: function() {
-      return this.athlete_results.filter(athlete_result =>
-        this.athlete_filter.includes(athlete_result.athlete_name)
-      );
+      return this.athlete_results
+        .filter(athlete_result =>
+          this.athlete_filter.includes(athlete_result.athlete_name)
+        )
+        .sort((a, b) => a.athlete_name.localeCompare(b.athlete_name));
     },
     segments: function() {
       var segments = [];
