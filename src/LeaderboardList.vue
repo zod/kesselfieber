@@ -15,6 +15,7 @@
           v-for="athlete_result in athlete_results"
           :key="athlete_result.athlete_name"
           :athlete_result="athlete_result"
+          v-on="$listeners"
         />
       </tbody>
     </table>

@@ -17,7 +17,11 @@
       </ul>
       <AthleteSearch :athletes="athletes" @add="addAthlete" @changeGender="changeGender" />
     </nav>
-    <LeaderboardList :athlete_results="athlete_results_visible" :segments="segments" />
+    <LeaderboardList
+      :athlete_results="athlete_results_visible"
+      :segments="segments"
+      @remove="removeAthlete"
+    />
     <div class="container-xl">
       <LeaderboardChart :athlete_results="athlete_results_visible" :segments="segments" />
     </div>
