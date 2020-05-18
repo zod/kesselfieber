@@ -101,7 +101,7 @@ export default {
           });
           /* Assign rank for every segment */
           var leaderboard_sorted = Array.from(leaderboard_total.entries()).sort(
-            (a, b) => a[1] < b[1]
+            (a, b) => b[1] - a[1]
           );
           for (
             var i = 0, rank = 0, rank_same = 0;
