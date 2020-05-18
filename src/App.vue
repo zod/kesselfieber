@@ -147,6 +147,7 @@ export default {
           var entry_kom = segment.leaderboard[this.athlete_gender].entries[0];
           segments.push({
             index: segment.index,
+            id: segment.id,
             name: segment.name,
             entry_count: segment.leaderboard[this.athlete_gender].entry_count,
             kom: {

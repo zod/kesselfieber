@@ -4,10 +4,10 @@
       <thead class="thead-light">
         <tr>
           <th>Name</th>
-          <th
-            v-for="segment in segments"
-            :key="segment.index"
-          >{{ segment.name }} ({{ segment.entry_count }})</th>
+          <th v-for="segment in segments" :key="segment.index">
+            <a :href="segment.id | strava_segment_url">{{ segment.name }}</a>
+            ({{ segment.entry_count }})
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +36,11 @@ export default {
     segments: {
       type: Array,
       required: true
+    }
+  },
+  filters: {
+    strava_segment_url: function(id) {
+      return "https://strava.com/segments/" + id;
     }
   }
 };
