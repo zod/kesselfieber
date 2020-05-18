@@ -45,7 +45,16 @@ export default {
             scheme: "brewer.Paired12"
           }
         },
+        tooltips: {
+          mode: "index",
+          intersect: false
+        },
         scales: {
+          xAxes: [
+            {
+              position: "top"
+            }
+          ],
           yAxes: [
             {
               scaleLabel: {
