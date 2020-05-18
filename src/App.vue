@@ -35,9 +35,7 @@ import LeaderboardList from "./LeaderboardList.vue";
 export default {
   components: { AthleteSearch, LeaderboardChart, LeaderboardList },
   mounted() {
-    fetch(
-      "https://cors-anywhere.herokuapp.com/https://bergzeitfahren.kesseln.cc/api/segments"
-    )
+    fetch("https://bergzeitfahren.kesseln.cc/api/segments")
       .then(response => response.json())
       .then(data => {
         this.segments_raw = data;
