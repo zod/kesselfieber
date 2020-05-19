@@ -44,7 +44,7 @@ export default {
         console.log("Error:", error);
       });
   },
-  data: function() {
+  data() {
     return {
       segments_raw: [],
       athlete_gender: "M",
@@ -52,12 +52,12 @@ export default {
     };
   },
   computed: {
-    athletes: function() {
+    athletes() {
       return this.athlete_results
         .map(athlete_result => athlete_result.athlete_name)
         .sort();
     },
-    athlete_results: function() {
+    athlete_results() {
       var athlete_results = new Map();
       var leaderboard_total = new Map();
       this.segments_raw.forEach(segment => {
@@ -130,14 +130,14 @@ export default {
       });
       return Array.from(athlete_results.values());
     },
-    athlete_results_visible: function() {
+    athlete_results_visible() {
       return this.athlete_results
         .filter(athlete_result =>
           this.athlete_filter.includes(athlete_result.athlete_name)
         )
         .sort((a, b) => a.athlete_name.localeCompare(b.athlete_name));
     },
-    segments: function() {
+    segments() {
       var segments = [];
       this.segments_raw.forEach(segment => {
         if (
@@ -160,7 +160,7 @@ export default {
     }
   },
   methods: {
-    addAthlete: function(athlete_name) {
+    addAthlete(athlete_name) {
       this.athlete_filter.push(athlete_name);
     },
     removeAthlete(athlete_name_remove) {
@@ -168,7 +168,7 @@ export default {
         athlete_name => athlete_name !== athlete_name_remove
       );
     },
-    changeGender: function(gender) {
+    changeGender(gender) {
       this.athlete_gender = gender;
       this.athlete_filter = [];
     }
