@@ -28,12 +28,16 @@ export default {
   data() {
     return {
       athlete_name: "",
-      athlete_gender: "M"
+      athlete_gender: this.athlete_gender_initial
     };
   },
   props: {
     athletes: {
       type: Array,
+      required: true
+    },
+    athlete_gender_initial: {
+      type: String,
       required: true
     }
   }

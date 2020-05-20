@@ -16,7 +16,12 @@
         -->
         <li class="nav-item nav-link disabled" v-if="!segments_raw.length">Lade Leistungen...</li>
       </ul>
-      <AthleteSearch :athletes="athletes" @add="addAthlete" @changeGender="changeGender" />
+      <AthleteSearch
+        :athletes="athletes"
+        :athlete_gender_initial="athlete_gender"
+        @add="addAthlete"
+        @changeGender="changeGender"
+      />
     </nav>
     <LeaderboardList
       :athlete_results="athlete_results_visible"
@@ -34,6 +39,20 @@ import LeaderboardList from "./LeaderboardList.vue";
 
 export default {
   components: { AthleteSearch, LeaderboardChart, LeaderboardList },
+  created() {
+    if (localStorage.getItem("athlete_gender")) {
+      this.athlete_gender = localStorage.getItem("athlete_gender");
+    }
+    if (localStorage.getItem("athlete_filter")) {
+      try {
+        this.athlete_filter = JSON.parse(
+          localStorage.getItem("athlete_filter")
+        );
+      } catch (e) {
+        localStorage.removeItem("athlete_filter");
+      }
+    }
+  },
   mounted() {
     fetch("https://bergzeitfahren.kesseln.cc/api/segments")
       .then(response => response.json())
@@ -162,15 +181,25 @@ export default {
   methods: {
     addAthlete(athlete_name) {
       this.athlete_filter.push(athlete_name);
+      this.saveAthletes();
     },
     removeAthlete(athlete_name_remove) {
       this.athlete_filter = this.athlete_filter.filter(
         athlete_name => athlete_name !== athlete_name_remove
       );
+      this.saveAthletes();
+    },
+    saveAthletes() {
+      localStorage.setItem(
+        "athlete_filter",
+        JSON.stringify(this.athlete_filter)
+      );
     },
     changeGender(gender) {
       this.athlete_gender = gender;
       this.athlete_filter = [];
+      localStorage.setItem("athlete_gender", gender);
+      this.saveAthletes();
     }
   }
 };
