@@ -161,7 +161,7 @@ export default {
       this.segments_raw.forEach(segment => {
         if (
           segment.visible &&
-          segment.leaderboard[this.athlete_gender].effort_count > 0
+          segment.leaderboard[this.athlete_gender].entry_count > 0
         ) {
           var entry_kom = segment.leaderboard[this.athlete_gender].entries[0];
           segments.push({
