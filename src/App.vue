@@ -55,11 +55,11 @@ export default {
   },
   mounted() {
     fetch("https://bergzeitfahren.kesseln.cc/api/segments")
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         this.segments_raw = data;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error:", error);
       });
   },
@@ -67,27 +67,27 @@ export default {
     return {
       segments_raw: [],
       athlete_gender: "M",
-      athlete_filter: []
+      athlete_filter: [],
     };
   },
   computed: {
     athletes() {
       return this.athlete_results
-        .map(athlete_result => athlete_result.athlete_name)
+        .map((athlete_result) => athlete_result.athlete_name)
         .sort();
     },
     athlete_results() {
       var athlete_results = new Map();
       var leaderboard_total = new Map();
-      this.segments_raw.forEach(segment => {
+      this.segments_raw.forEach((segment) => {
         if (segment.visible && segment.leaderboard) {
-          segment.leaderboard[this.athlete_gender].entries.forEach(entry => {
+          segment.leaderboard[this.athlete_gender].entries.forEach((entry) => {
             /* Assign efforts to each athlete */
             var athlete_name = entry.athlete_name;
             var segment_result = {
               index: segment.index,
               elapsed_time: entry.elapsed_time,
-              rank_segment: entry.rank
+              rank_segment: entry.rank,
             };
             if (!athlete_results.has(athlete_name)) {
               var segment_results_empty = [];
@@ -96,7 +96,7 @@ export default {
               }
               athlete_results.set(athlete_name, {
                 athlete_name: athlete_name,
-                segments: [...segment_results_empty, segment_result]
+                segments: [...segment_results_empty, segment_result],
               });
             } else {
               athlete_results.get(athlete_name).segments.push(segment_result);
@@ -135,7 +135,7 @@ export default {
             var segment_result = {
               index: segment.index,
               rank_total: rank,
-              points: points
+              points: points,
             };
             var athlete_segments = athlete_results.get(athlete_name).segments;
             var last_segment = athlete_segments[athlete_segments.length - 1];
@@ -151,14 +151,14 @@ export default {
     },
     athlete_results_visible() {
       return this.athlete_results
-        .filter(athlete_result =>
+        .filter((athlete_result) =>
           this.athlete_filter.includes(athlete_result.athlete_name)
         )
         .sort((a, b) => a.athlete_name.localeCompare(b.athlete_name));
     },
     segments() {
       var segments = [];
-      this.segments_raw.forEach(segment => {
+      this.segments_raw.forEach((segment) => {
         if (
           segment.visible &&
           segment.leaderboard[this.athlete_gender].entry_count > 0
@@ -170,13 +170,13 @@ export default {
             name: segment.name,
             entry_count: segment.leaderboard[this.athlete_gender].entry_count,
             kom: {
-              elapsed_time: entry_kom.elapsed_time
-            }
+              elapsed_time: entry_kom.elapsed_time,
+            },
           });
         }
       });
       return segments;
-    }
+    },
   },
   methods: {
     addAthlete(athlete_name) {
@@ -185,7 +185,7 @@ export default {
     },
     removeAthlete(athlete_name_remove) {
       this.athlete_filter = this.athlete_filter.filter(
-        athlete_name => athlete_name !== athlete_name_remove
+        (athlete_name) => athlete_name !== athlete_name_remove
       );
       this.saveAthletes();
     },
@@ -200,7 +200,7 @@ export default {
       this.athlete_filter = [];
       localStorage.setItem("athlete_gender", gender);
       this.saveAthletes();
-    }
-  }
+    },
+  },
 };
 </script>
