@@ -54,7 +54,7 @@ export default {
     }
   },
   mounted() {
-    fetch("segments")
+    fetch("https://bergzeitfahren.kesseln.cc/api/segments")
       .then((response) => response.json())
       .then((data) => {
         this.segments_raw = data;
