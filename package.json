@@ -1,7 +1,8 @@
 {
   "name": "kesselfieber",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fieberkurven zur Schwäbischen Meisterschaften im Bergzeitfahren",
+  "repository": "github:zod/kesselfieber",
   "main": "index.js",
   "directories": {
     "test": "test"
