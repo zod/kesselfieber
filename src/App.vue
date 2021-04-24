@@ -80,19 +80,19 @@ export default {
       var athlete_results = new Map();
       var leaderboard_total = new Map();
       this.segments_raw.forEach((segment) => {
-        if (segment.visible && segment.leaderboard) {
+        if (segment.display && segment.leaderboard) {
           segment.leaderboard[this.athlete_gender].entries.forEach((entry) => {
             /* Assign efforts to each athlete */
             var athlete_name = entry.athlete_name;
             var segment_result = {
-              index: segment.index,
+              order: segment.order,
               elapsed_time: entry.elapsed_time,
               rank_segment: entry.rank,
             };
             if (!athlete_results.has(athlete_name)) {
               var segment_results_empty = [];
-              for (var i = 1; i < segment.index; i++) {
-                segment_results_empty.push({ index: i });
+              for (var i = 1; i < segment.order; i++) {
+                segment_results_empty.push({ order: i });
               }
               athlete_results.set(athlete_name, {
                 athlete_name: athlete_name,
@@ -133,13 +133,13 @@ export default {
               rank_same = 0;
             }
             var segment_result = {
-              index: segment.index,
+              order: segment.order,
               rank_total: rank,
               points: points,
             };
             var athlete_segments = athlete_results.get(athlete_name).segments;
             var last_segment = athlete_segments[athlete_segments.length - 1];
-            if (last_segment.index == segment.index) {
+            if (last_segment.order == segment.order) {
               Object.assign(last_segment, segment_result);
             } else {
               athlete_results.get(athlete_name).segments.push(segment_result);
@@ -160,12 +160,12 @@ export default {
       var segments = [];
       this.segments_raw.forEach((segment) => {
         if (
-          segment.visible &&
+          segment.display &&
           segment.leaderboard[this.athlete_gender].entry_count > 0
         ) {
           var entry_kom = segment.leaderboard[this.athlete_gender].entries[0];
           segments.push({
-            index: segment.index,
+            order: segment.order,
             id: segment.id,
             name: segment.name,
             entry_count: segment.leaderboard[this.athlete_gender].entry_count,
