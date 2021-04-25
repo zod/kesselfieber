@@ -13,7 +13,7 @@
       <tbody>
         <LeaderboardListItem
           v-for="athlete_result in athlete_results"
-          :key="athlete_result.athlete_name"
+          :key="athlete_result.athlete.id"
           :athlete_result="athlete_result"
           v-on="$listeners"
         />

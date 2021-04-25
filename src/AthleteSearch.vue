@@ -12,14 +12,14 @@
       <option value="F">Mädla</option>
     </select>
     <label class="sr-only" for="selectAthlete">Name</label>
-    <select class="custom-select" name="athlete" id="selectAthlete" v-model="athlete_name">
-      <option v-for="athlete in athletes" :key="athlete" :value="athlete">{{ athlete }}</option>
+    <select class="custom-select" name="athlete" id="selectAthlete" v-model="athlete_id">
+      <option v-for="athlete in athletes" :key="athlete.id" :value="athlete.id">{{ athlete.fullname }}</option>
     </select>
 
     <button
       class="btn btn-outline-primary my-2 my-sm-0"
       type="submit"
-      @click="$emit('add', athlete_name)"
+      @click="$emit('add', athlete_id)"
     >hinzufügen</button>
   </div>
 </template>
@@ -27,7 +27,7 @@
 export default {
   data() {
     return {
-      athlete_name: "",
+      athlete_id: 0,
       athlete_gender: this.athlete_gender_initial
     };
   },

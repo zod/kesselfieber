@@ -29,7 +29,7 @@ export default {
         datasets: this.athlete_results.map(athlete_result => {
           return {
             lineTension: 0,
-            label: athlete_result.athlete_name,
+            label: athlete_result.athlete.fullname,
             fill: false,
             data: athlete_result.segments.map(segment => {
               return segment.rank_total;

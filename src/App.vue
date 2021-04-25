@@ -79,8 +79,8 @@ export default {
   computed: {
     athletes() {
       return this.athlete_results
-        .map((athlete_result) => athlete_result.athlete_name)
-        .sort();
+        .map((athlete_result) => athlete_result.athlete)
+        .sort((a, b) => a.fullname.localeCompare(b.fullname));
     },
     athlete_results() {
       var athlete_results = new Map();
@@ -89,33 +89,33 @@ export default {
         if (segment.display && segment.efforts) {
           segment.efforts.forEach((entry) => {
             /* Assign efforts to each athlete */
-            var athlete_name = entry.athlete.fullname;
+            var athlete_id = entry.athlete.id;
             var segment_result = {
               order: segment.order,
               elapsed_time: entry.elapsed_time,
               rank_segment: entry.rank,
             };
-            if (!athlete_results.has(athlete_name)) {
+            if (!athlete_results.has(athlete_id)) {
               var segment_results_empty = [];
               for (var i = 1; i < segment.order; i++) {
                 segment_results_empty.push({ order: i });
               }
-              athlete_results.set(athlete_name, {
-                athlete_name: athlete_name,
+              athlete_results.set(athlete_id, {
+                athlete: entry.athlete,
                 segments: [...segment_results_empty, segment_result],
               });
             } else {
-              athlete_results.get(athlete_name).segments.push(segment_result);
+              athlete_results.get(athlete_id).segments.push(segment_result);
             }
 
             /* Assign points into global leaderboard */
             var points = entry.points;
-            if (!leaderboard_total.has(athlete_name)) {
-              leaderboard_total.set(athlete_name, points);
+            if (!leaderboard_total.has(athlete_id)) {
+              leaderboard_total.set(athlete_id, points);
             } else {
               leaderboard_total.set(
-                athlete_name,
-                points + leaderboard_total.get(athlete_name)
+                athlete_id,
+                points + leaderboard_total.get(athlete_id)
               );
             }
           });
@@ -128,7 +128,7 @@ export default {
             i < leaderboard_sorted.length;
             i++
           ) {
-            var [athlete_name, points] = leaderboard_sorted[i];
+            var [athlete_id, points] = leaderboard_sorted[i];
             if (i > 0 && points == leaderboard_sorted[i - 1].points) {
               rank_same += 1;
             } else {
@@ -140,12 +140,12 @@ export default {
               rank_total: rank,
               points: points,
             };
-            var athlete_segments = athlete_results.get(athlete_name).segments;
+            var athlete_segments = athlete_results.get(athlete_id).segments;
             var last_segment = athlete_segments[athlete_segments.length - 1];
             if (last_segment.order == segment.order) {
               Object.assign(last_segment, segment_result);
             } else {
-              athlete_results.get(athlete_name).segments.push(segment_result);
+              athlete_results.get(athlete_id).segments.push(segment_result);
             }
           }
         }
@@ -155,9 +155,9 @@ export default {
     athlete_results_visible() {
       return this.athlete_results
         .filter((athlete_result) =>
-          this.athlete_filter.includes(athlete_result.athlete_name)
+          this.athlete_filter.includes(athlete_result.athlete.id)
         )
-        .sort((a, b) => a.athlete_name.localeCompare(b.athlete_name));
+        .sort((a, b) => a.athlete.fullname.localeCompare(b.athlete.fullname));
     },
     segments() {
       var segments = [];
@@ -183,13 +183,13 @@ export default {
     },
   },
   methods: {
-    addAthlete(athlete_name) {
-      this.athlete_filter.push(athlete_name);
+    addAthlete(athlete_id) {
+      this.athlete_filter.push(athlete_id);
       this.saveAthletes();
     },
-    removeAthlete(athlete_name_remove) {
+    removeAthlete(athlete_id_remove) {
       this.athlete_filter = this.athlete_filter.filter(
-        (athlete_name) => athlete_name !== athlete_name_remove
+        (athlete_id) => athlete_id !== athlete_id_remove
       );
       this.saveAthletes();
     },
