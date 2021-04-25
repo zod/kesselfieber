@@ -14,7 +14,9 @@
           <a class="nav-link" href="#">Gesamtfieber</a>
         </li>
         -->
-        <li class="nav-item nav-link disabled" v-if="!segments_raw.length">Lade Leistungen...</li>
+        <li class="nav-item nav-link disabled" v-if="!segments_raw.length">
+          Lade Leistungen...
+        </li>
       </ul>
       <AthleteSearch
         :athletes="athletes"
@@ -28,7 +30,10 @@
       :segments="segments"
       @remove="removeAthlete"
     />
-    <LeaderboardChart :athlete_results="athlete_results_visible" :segments="segments" />
+    <LeaderboardChart
+      :athlete_results="athlete_results_visible"
+      :segments="segments"
+    />
   </div>
 </template>
 
@@ -36,6 +41,7 @@
 import AthleteSearch from "./AthleteSearch.vue";
 import LeaderboardChart from "./LeaderboardChart.vue";
 import LeaderboardList from "./LeaderboardList.vue";
+import Vue from 'vue'
 
 export default {
   components: { AthleteSearch, LeaderboardChart, LeaderboardList },
@@ -56,8 +62,8 @@ export default {
   mounted() {
     fetch("https://smb21.kesseln.cc/api/segments")
       .then((response) => response.json())
-      .then((data) => {
-        this.segments_raw = data;
+      .then((segments) => {
+        this.segments_raw = segments;
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -80,10 +86,10 @@ export default {
       var athlete_results = new Map();
       var leaderboard_total = new Map();
       this.segments_raw.forEach((segment) => {
-        if (segment.display && segment.leaderboard) {
-          segment.leaderboard[this.athlete_gender].entries.forEach((entry) => {
+        if (segment.display && segment.efforts) {
+          segment.efforts.forEach((entry) => {
             /* Assign efforts to each athlete */
-            var athlete_name = entry.athlete_name;
+            var athlete_name = entry.athlete.fullname;
             var segment_result = {
               order: segment.order,
               elapsed_time: entry.elapsed_time,
@@ -103,10 +109,7 @@ export default {
             }
 
             /* Assign points into global leaderboard */
-            var points =
-              segment.leaderboard[this.athlete_gender].entry_count -
-              entry.rank +
-              1;
+            var points = entry.points;
             if (!leaderboard_total.has(athlete_name)) {
               leaderboard_total.set(athlete_name, points);
             } else {
@@ -161,14 +164,15 @@ export default {
       this.segments_raw.forEach((segment) => {
         if (
           segment.display &&
-          segment.leaderboard[this.athlete_gender].entry_count > 0
+          segment.efforts &&
+          segment.efforts.length > 0
         ) {
-          var entry_kom = segment.leaderboard[this.athlete_gender].entries[0];
+          var entry_kom = segment.efforts[0];
           segments.push({
             order: segment.order,
             id: segment.id,
             name: segment.name,
-            entry_count: segment.leaderboard[this.athlete_gender].entry_count,
+            entry_count: segment.efforts.length,
             kom: {
               elapsed_time: entry_kom.elapsed_time,
             },
@@ -200,6 +204,20 @@ export default {
       this.athlete_filter = [];
       localStorage.setItem("athlete_gender", gender);
       this.saveAthletes();
+      this.segments_raw.forEach((segment) => {
+        if (segment.display) {
+          fetch(
+            `https://smb21.kesseln.cc/api/segments/${segment.id}/efforts?gender=${this.athlete_gender}`
+          )
+            .then((response) => response.json())
+            .then((efforts) => {
+              var idx = this.segments_raw.findIndex(
+                (segment_raw) => segment_raw.id == segment.id
+              );
+              Vue.set(this.segments_raw[idx], 'efforts', efforts);
+            });
+        }
+      });
     },
   },
 };
