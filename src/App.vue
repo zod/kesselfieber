@@ -41,7 +41,7 @@
 import AthleteSearch from "./AthleteSearch.vue";
 import LeaderboardChart from "./LeaderboardChart.vue";
 import LeaderboardList from "./LeaderboardList.vue";
-import Vue from 'vue'
+import Vue from "vue";
 
 export default {
   components: { AthleteSearch, LeaderboardChart, LeaderboardList },
@@ -64,6 +64,7 @@ export default {
       .then((response) => response.json())
       .then((segments) => {
         this.segments_raw = segments;
+        this.updateEfforts();
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -162,11 +163,7 @@ export default {
     segments() {
       var segments = [];
       this.segments_raw.forEach((segment) => {
-        if (
-          segment.display &&
-          segment.efforts &&
-          segment.efforts.length > 0
-        ) {
+        if (segment.display && segment.efforts && segment.efforts.length > 0) {
           var entry_kom = segment.efforts[0];
           segments.push({
             order: segment.order,
@@ -180,6 +177,11 @@ export default {
         }
       });
       return segments;
+    },
+  },
+  watch: {
+    athlete_gender: function () {
+      this.updateEfforts();
     },
   },
   methods: {
@@ -200,10 +202,14 @@ export default {
       );
     },
     changeGender(gender) {
+      console.log(gender)
+      if (gender != "M" && gender != "F") { return; }
       this.athlete_gender = gender;
       this.athlete_filter = [];
       localStorage.setItem("athlete_gender", gender);
       this.saveAthletes();
+    },
+    updateEfforts() {
       this.segments_raw.forEach((segment) => {
         if (segment.display) {
           fetch(
@@ -214,7 +220,7 @@ export default {
               var idx = this.segments_raw.findIndex(
                 (segment_raw) => segment_raw.id == segment.id
               );
-              Vue.set(this.segments_raw[idx], 'efforts', efforts);
+              Vue.set(this.segments_raw[idx], "efforts", efforts);
             });
         }
       });
