@@ -202,7 +202,6 @@ export default {
       );
     },
     changeGender(gender) {
-      console.log(gender)
       if (gender != "M" && gender != "F") { return; }
       this.athlete_gender = gender;
       this.athlete_filter = [];
