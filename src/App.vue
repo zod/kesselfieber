@@ -65,6 +65,7 @@ export default {
       .then((segments) => {
         this.segments_raw = segments;
         this.updateEfforts();
+        this.updateLeaderboard();
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -72,16 +73,18 @@ export default {
   },
   data() {
     return {
+      athletes_raw: [],
       segments_raw: [],
+      efforts_raw: [],
       athlete_gender: "M",
       athlete_filter: [],
     };
   },
   computed: {
     athletes() {
-      return this.athlete_results
-        .map((athlete_result) => athlete_result.athlete)
-        .sort((a, b) => a.fullname.localeCompare(b.fullname));
+      return this.athletes_raw.sort((a, b) =>
+        a.fullname.localeCompare(b.fullname)
+      );
     },
     athlete_results() {
       var athlete_results = new Map();
@@ -202,11 +205,22 @@ export default {
       );
     },
     changeGender(gender) {
-      if (gender != "M" && gender != "F") { return; }
+      if (gender != "M" && gender != "F") {
+        return;
+      }
       this.athlete_gender = gender;
       this.athlete_filter = [];
       localStorage.setItem("athlete_gender", gender);
       this.saveAthletes();
+    },
+    updateLeaderboard() {
+      fetch(
+        `https://smb21.kesseln.cc/api/athletes?gender=${this.athlete_gender}`
+      )
+        .then((response) => response.json())
+        .then((athletes) => {
+          this.athletes_raw = athletes;
+        });
     },
     updateEfforts() {
       this.segments_raw.forEach((segment) => {
